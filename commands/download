@@ -1,0 +1,18 @@
+#!/bin/bash
+#   
+#   Usage: kk download <remote-path> [local-dest]
+#   
+#   Example: kk download ~/report.md
+#   Example: kk download /var/log/nginx/error.log ./
+#   
+
+DESCRIPTION="Download files over SSH"
+REMOTE_HOST="root@192.241.216.26"
+DEST="${2:-$HOME/Downloads}"
+
+if [ -z "$1" ]; then
+  exec kk download --help
+fi
+
+scp "$REMOTE_HOST:$1" "$DEST/"
+echo "kk downloaded to $DEST/"
