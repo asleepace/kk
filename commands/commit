@@ -54,7 +54,7 @@ fi
 kk_info "committing ${GREEN}${FILE_COUNT}${GRAY} file(s) to ${YELLOW}$BRANCH${GRAY}: ${CYAN}\"${COMMIT_MESSAGE}\"${NC}\n"
 
 echo "$FILES" | while read -r file; do
-  echo -e "  ${DIM}•${NC} ${DIM}${GREEN}$(pwd)/$file${NC}"
+  echo -e "  ${DIM}•${NC} ${DIM}${GREEN}$file${NC}"
 done
 
 # Commit and push
