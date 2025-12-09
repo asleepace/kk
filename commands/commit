@@ -61,6 +61,7 @@ kk_info "committing ${GREEN}${FILE_COUNT}${GRAY} file(s) to ${YELLOW}$BRANCH${GR
 # dones
 
 # Commit and push
+# Commit and push
 git commit -m "$COMMIT_MESSAGE" 2>&1 | while read -r line; do
   echo -e "  ${DIM_GRAY}$line${NC}"
 done
@@ -68,3 +69,5 @@ done
 git push 2>&1 | while read -r line; do
   echo -e "  ${DIM_GRAY}$line${NC}"
 done
+
+kk_info "${GREEN}Done ✓${NC}"
