@@ -51,7 +51,7 @@ else
   COMMIT_MESSAGE=$(generate_commit_message)
 fi
 
-kk_info "committing ${GREEN}${FILE_COUNT}${GRAY} file(s) to ${YELLOW}$BRANCH${GRAY}: ${CYAN}\"${COMMIT_MESSAGE}\"${NC}"
+kk_info "committing ${GREEN}${FILE_COUNT}${GRAY} file(s) to ${YELLOW}$BRANCH${GRAY}: ${CYAN}\"${COMMIT_MESSAGE}\"${NC}\n"
 
 echo "$FILES" | while read -r file; do
   echo -e "  ${DIM}•${NC} ${DIM_GRAY}$(pwd)/$file${NC}"
