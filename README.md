@@ -40,6 +40,20 @@ echo 'export PATH="$HOME/.kk:$PATH"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
+For auto-completions to work, please add the following to your `~/.zshrc`
+
+```bash
+# kk autocompletions
+_kk_completions() {
+  local commands
+  commands=($(ls -1 ~/.kk/commands))
+  _describe 'command' commands
+}
+compdef _kk_completions kk
+```
+
+Then run `source ~/.zshrc`
+
 ## Adding Commands
 
 Create a new file in `~/.kk/commands/`:

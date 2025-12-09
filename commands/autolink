@@ -1,0 +1,23 @@
+#!/bin/bash
+# Make all kk commands executable
+# Usage: kk autolink
+
+DESCRIPTION="Make all kk commands executable"
+source "$HOME/.kk/lib/common"
+
+COMMANDS_DIR="$HOME/.kk/commands"
+COUNT=0
+
+for cmd in "$COMMANDS_DIR"/*; do
+  if [ -f "$cmd" ] && [ ! -x "$cmd" ]; then
+    chmod +x "$cmd"
+    kk_info "chmod +x ${CYAN}$(basename "$cmd")${NC}"
+    COUNT=$((COUNT + 1))
+  fi
+done
+
+if [ "$COUNT" -eq 0 ]; then
+  kk_info "all commands already executable ✓"
+else
+  kk_info "made ${GREEN}${COUNT}${NC} command(s) executable ✓"
+fi
