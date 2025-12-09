@@ -41,7 +41,7 @@ FILE_COUNT=$(echo "$FILES" | grep -c . || echo "0")
 # Stage all changes
 git add .
 
-kk_info "committing ${GREEN}${FILE_COUNT}${GRAY} file(s) to ${INDIGO}$BRANCH${NC}"
+kk_info "committing ${GREEN}${FILE_COUNT}${GRAY} file(s) to ${YELLOW}$BRANCH${NC}"
 
 echo "$FILES" | while read -r file; do
   echo -e "  ${DIM}•${NC} ${CYAN}$file${NC}"
@@ -55,7 +55,7 @@ else
   COMMIT_MESSAGE=$(generate_commit_message)
 fi
 
-echo -e "\t${CYAN}'$COMMIT_MESSAGE'${NC}${DIM_GRAY}"
+echo -e "  ${CYAN}\"$COMMIT_MESSAGE\"${NC}${DIM_GRAY}"
 
 # Commit and push
 git commit -m "$COMMIT_MESSAGE" || kk_die "Nothing to commit"
