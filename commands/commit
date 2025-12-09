@@ -28,7 +28,7 @@ generate_commit_message() {
         {role: "system", content: "Generate a single-line git commit message. No quotes, no prefix, just the message."},
         {role: "user", content: $prompt}
       ],
-      model: "grok-4-latest",
+      model: "grok-4-1-fast-non-reasoning",
       stream: false,
       temperature: 0
     }')" | jq -r '.choices[0].message.content'
@@ -55,7 +55,7 @@ else
   COMMIT_MESSAGE=$(generate_commit_message)
 fi
 
-kk_info "Message: ${CYAN}$COMMIT_MESSAGE${NC}${DIM_GRAY}"
+echo -e "\t${CYAN}'$COMMIT_MESSAGE'${NC}${DIM_GRAY}"
 
 # Commit and push
 git commit -m "$COMMIT_MESSAGE" || kk_die "Nothing to commit"
