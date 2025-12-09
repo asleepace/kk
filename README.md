@@ -8,6 +8,9 @@ a collection of useful bash scripts
 # download remote files or folders from SSH
 kk download ~/asleepace.com
 kk download ~/asleepace.com ~/Desktop
+
+# fetch json via curl and jq
+kk fetch-json https://api.github.com/users/asleepace
 ```
 
 ## Installation 

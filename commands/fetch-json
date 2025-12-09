@@ -1,0 +1,21 @@
+#!/bin/bash
+# Fetch URL and parse as JSON
+# Usage: kk fetch-json <url>
+# Example: kk fetch-json https://api.github.com/users/asleepace
+
+DESCRIPTION="Fetch URL and parse as JSON"
+source "$HOME/.kk/lib/common"
+kk_trap_errors
+
+if [ -z "$1" ]; then
+  kk_die "Usage: kk fetch-json <url>"
+fi
+
+URL="$1"
+
+# Check for jq, fallback to python
+if command -v jq >/dev/null 2>&1; then
+  curl -sf "$URL" | jq
+else
+  curl -sf "$URL" | python3 -m json.tool
+fi
