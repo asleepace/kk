@@ -70,4 +70,4 @@ git push 2>&1 | while read -r line; do
   echo -e "  ${DIM_GRAY}$line${NC}"
 done
 
-kk_info "${GREEN}Done ✓${NC}"
+kk_info "${GREEN}done ✓${NC}"
