@@ -7,12 +7,16 @@
 #   
 
 DESCRIPTION="Download files over SSH"
+source "$HOME/.kk/lib/common"
+kk_trap_errors
+
 REMOTE_HOST="root@192.241.216.26"
 DEST="${2:-$HOME/Downloads}"
 
-if [ -z "$1" ]; then
-  exec kk download --help
-fi
+kk_require_arg "remote-path" "$1"
+kk_require_cmd "scp"
 
+kk_info "downloading$CYAN $1$GRAY to$CYAN $DEST/$DIM_GRAY"
 scp "$REMOTE_HOST:$1" "$DEST/"
-echo "kk downloaded to $DEST/"
+kk_info "done!"
+

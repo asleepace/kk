@@ -1,0 +1,43 @@
+#!/bin/bash
+# Shared utilities for kk commands
+
+# Exit on error, catch pipe failures
+# -e — exit on error
+# -u — error on undefined variables
+# -o pipefail — pipeline fails if any command fails
+set -euo pipefail
+
+# Colors
+export RED='\033[0;31m'
+export GREEN='\033[0;32m'
+export YELLOW='\033[0;33m'
+export NC='\033[0m' # No color
+export DIM='\033[2m'
+export GRAY='\033[0;90m'
+export DIM_GRAY='\033[2;90m'
+export CYAN='\033[0;36m'
+export YELLOW='\033[0;33m'
+export INDIGO='\033[38;5;54m'
+
+# Logging
+kk_info()  { echo -e "${GREEN}kk${NC}${GRAY} $1"; }
+kk_warn()  { echo -e "${YELLOW}kk${NC} $1"; }
+kk_error() { echo -e "${RED}kk${NC} $1" >&2; }
+kk_die()   { kk_error "$1"; exit "${2:-1}"; }
+
+# Require arguments
+kk_require_arg() {
+  if [ -z "$2" ]; then
+    kk_die "missing required argument: $1"
+  fi
+}
+
+# Check command exists
+kk_require_cmd() {
+  command -v "$1" >/dev/null 2>&1 || kk_die "required command not found: $1"
+}
+
+# Trap errors
+kk_trap_errors() {
+  trap 'kk_error "command failed at line $LINENO: $BASH_COMMAND"' ERR
+}
