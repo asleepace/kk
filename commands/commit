@@ -66,4 +66,4 @@ commit_and_push() {
   git push || kk_die "Push failed"
 }
 
-echo "${DIM_GRAY}  $(commit_and_push)${NC}"
+echo -e "${DIM_GRAY}  $(commit_and_push)${NC}"
