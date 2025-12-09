@@ -44,14 +44,14 @@ git add .
 kk_info "committing ${GREEN}${FILE_COUNT}${GRAY} file(s) to ${YELLOW}$BRANCH${NC}"
 
 echo "$FILES" | while read -r file; do
-  echo -e "  ${DIM}•${NC} ${CYAN}$(pwd)/$file${NC}"
+  echo -e "  ${DIM}•${NC} ${DIM_GRAY}$(pwd)/$file${NC}"
 done
 
 # Get commit message
 if [ -n "${1:-}" ]; then
   COMMIT_MESSAGE="$1"
 else
-  kk_info "Generating commit message..."
+  kk_info "generating commit message..."
   COMMIT_MESSAGE=$(generate_commit_message)
 fi
 
