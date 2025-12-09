@@ -61,9 +61,5 @@ kk_info "committing ${GREEN}${FILE_COUNT}${GRAY} file(s) to ${YELLOW}$BRANCH${GR
 # dones
 
 # Commit and push
-commit_and_push() {
-  git commit -m "$COMMIT_MESSAGE" || kk_die "Nothing to commit"
-  git push || kk_die "Push failed"
-}
-
-echo -e "${DIM_GRAY}  $(commit_and_push)${NC}"
+git commit -m "$COMMIT_MESSAGE" 2>&1 | sed "s/^/  ${DIM_GRAY}/" | sed "s/$/${NC}/"
+git push 2>&1 | sed "s/^/  ${DIM_GRAY}/" | sed "s/$/${NC}/"
