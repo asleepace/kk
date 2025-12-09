@@ -58,7 +58,8 @@ echo "$FILES" | while read -r file; do
 done
 
 # Commit and push
+echo -e "${DIM}"
 git commit -m "$COMMIT_MESSAGE" || kk_die "Nothing to commit"
 git push || kk_die "Push failed"
 
-kk_info "finished ✓"
+kk_info "${NC}finished ✓"
