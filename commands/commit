@@ -41,8 +41,11 @@ FILE_COUNT=$(echo "$FILES" | grep -c . || echo "0")
 # Stage all changes
 git add .
 
-kk_info "Committing ${FILE_COUNT} files to ${CYAN}$BRANCH${NC}..."
-echo -e "${DIM}$FILES${NC}" | sed 's/^/  /'
+kk_info "committing ${GREEN}${FILE_COUNT}${DIM_GRAY} files to ${CYAN}$BRANCH${NC}..."
+
+echo "$FILES" | while read -r file; do
+  echo -e "  ${DIM}•${NC} ${GREEN}$file${NC}"
+done
 
 # Get commit message
 if [ -n "${1:-}" ]; then
