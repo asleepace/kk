@@ -54,15 +54,14 @@ else
   COMMIT_MESSAGE=$(generate_commit_message)
 fi
 
-kk_info "committing ${GREEN}${FILE_COUNT}${GRAY} file(s) to ${YELLOW}$BRANCH${GRAY}: ${CYAN}\"${COMMIT_MESSAGE}\"${NC}"
+kk_info "committing ${GREEN}${FILE_COUNT}${GRAY} file(s) to ${YELLOW}$BRANCH${GRAY}: ${CYAN}\"${COMMIT_MESSAGE}\"${DIM_GRAY}"
 
 # echo "$FILES" | while read -r file; do
 #   echo -e "  ${DIM}•${NC} ${DIM}${GREEN}$file${NC}"
 # done
 
 # Commit and push
-echo -e "${DIM_GRAY}"
 git commit -m "$COMMIT_MESSAGE" || kk_die "Nothing to commit"
 git push || kk_die "Push failed"
 
-kk_info "${NC}finished ✓"
+kk_info "${GRAY}finished ${GREEN}✓${NC}"
