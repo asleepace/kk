@@ -1,0 +1,38 @@
+#!/bin/bash
+# Generate a commit message with AI
+# Usage: kk diff
+# Example: kk diff
+
+DESCRIPTION="Generate a commit message with AI"
+source "$HOME/.kk/lib/common"
+kk_trap_errors
+
+if [ -z "$XAI_API_KEY" ]; then
+  kk_die "Missing XAI_API_KEY in .zshrc"
+fi
+
+DIFF=$(git diff --cached)
+if [ -z "$DIFF" ]; then
+  DIFF=$(git diff)
+fi
+
+if [ -z "$DIFF" ]; then
+  kk_die "No changes to diff"
+fi
+
+# Truncate to ~4000 chars to avoid huge API calls
+DIFF=$(echo "$DIFF" | head -c 4000)
+PROMPT="Generate a short, concise git commit message for these changes:\n\n$DIFF"
+
+curl -s https://api.x.ai/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $XAI_API_KEY" \
+  -d "$(jq -n --arg prompt "$PROMPT" '{
+    messages: [
+      {role: "system", content: "Generate a single-line git commit message. No quotes, no prefix, just the message, one sentence only."},
+      {role: "user", content: $prompt}
+    ],
+    model: "grok-4-1-fast-non-reasoning",
+    stream: false,
+    temperature: 0.5
+  }')" | jq -r '.choices[0].message.content'
