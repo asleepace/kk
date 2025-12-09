@@ -20,7 +20,7 @@ generate_commit_message() {
 
   PROMPT="Generate a short, concise git commit message for these changes:\n\n$DIFF"
 
-  echo -e "  ${PROMPT}"
+  echo -e "  $(git diff)"
 
   curl -s https://api.x.ai/v1/chat/completions \
     -H "Content-Type: application/json" \
