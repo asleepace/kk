@@ -2,6 +2,14 @@
 
 a collection of useful bash scripts
 
+## Examples
+
+```bash
+# download remote files or folders from SSH
+kk download ~/asleepace.com
+kk download ~/asleepace.com ~/Desktop
+```
+
 ## Installation 
 
 ```bash
