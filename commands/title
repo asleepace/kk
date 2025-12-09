@@ -1,0 +1,19 @@
+#!/bin/bash
+# Set terminal window title
+# Usage: kk title [name]
+# Example: kk title myproject
+# Example: kk title (auto-detects from git/directory)
+
+DESCRIPTION="Set terminal window title"
+source "$HOME/.kk/lib/common"
+
+if [ -n "${1:-}" ]; then
+  TITLE="$1"
+elif git rev-parse --is-inside-work-tree &>/dev/null; then
+  TITLE=$(basename "$(git rev-parse --show-toplevel)")
+else
+  TITLE=$(basename "$PWD")
+fi
+
+echo -ne "\033]0;${TITLE}\007"
+kk_info "Title set to ${CYAN}${TITLE}${NC}"
