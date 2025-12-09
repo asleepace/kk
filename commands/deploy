@@ -1,0 +1,35 @@
+#!/bin/bash
+# Deploy a site to the droplet
+# Usage: kk deploy [site-name] [commit-message]
+# Example: kk deploy asleepace.com "fix: update styles"
+# Example: kk deploy (uses current directory name)
+
+DESCRIPTION="Deploy a site to the droplet"
+source "$HOME/.kk/lib/common"
+kk_trap_errors
+
+format_date() {
+  date +"%m-%d-%Y %-I:%M %p"
+}
+
+# Check branch
+BRANCH=$(git branch --show-current)
+if [ "$BRANCH" != "main" ] && [ "$BRANCH" != "master" ]; then
+  kk_die "Not on main/master branch (currently on $BRANCH)"
+fi
+
+REMOTE_HOST="root@asleepace.com"
+SITE="asleepace.com"
+MSG="auto-deploy ${SITE} $(format_date)"
+
+# Local: add, commit, push
+kk_info "auto-deploy committing changes..."
+git add .
+git commit -m "$MSG" || kk_warn "Nothing to commit"
+git push || kk_die "Push failed"
+
+# Remote: pull and restart
+kk_info "auto-deploy connecting to remote $SITE..."
+ssh "$REMOTE_HOST" "cd ~/$SITE && bun run deploy"
+
+kk_info "auto-deply $SITE ✓"
