@@ -38,20 +38,23 @@ BRANCH=$(git branch --show-current)
 FILES=$(git diff --name-only HEAD 2>/dev/null || git diff --name-only)
 FILE_COUNT=$(echo "$FILES" | grep -c . || echo "0")
 
+# Early exit if no changes
+if [ $FILE_COUNT -lt 1 ]; then
+    echo -e "${YELLOW}No changes to commit!${NC}"
+    exit 0
+fi
+
 # Stage all changes
 git add .
-
-
 
 # Get commit message
 if [ -n "${1:-}" ]; then
   COMMIT_MESSAGE="$1"
 else
-  kk_info "generating commit message..."
   COMMIT_MESSAGE=$(generate_commit_message)
 fi
 
-kk_info "committing ${GREEN}${FILE_COUNT}${GRAY} file(s) to ${YELLOW}$BRANCH${GRAY}: ${CYAN}\"${COMMIT_MESSAGE}\"${NC}\n"
+kk_info "committing ${GREEN}${FILE_COUNT}${GRAY} file(s) to ${YELLOW}$BRANCH${GRAY}: ${CYAN}\"${COMMIT_MESSAGE}\"${NC}"
 
 echo "$FILES" | while read -r file; do
   echo -e "  ${DIM}•${NC} ${DIM}${GREEN}$file${NC}"
