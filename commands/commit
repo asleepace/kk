@@ -36,10 +36,13 @@ generate_commit_message() {
     }')" | jq -r '.choices[0].message.content'
 }
 
-BRANCH=$(git branch --show-current)
-FILES=$(git diff --name-only HEAD 2>/dev/null || git diff --name-only)
+# Stage all changes
+git add .
 
-# Coun number of file changes
+BRANCH=$(git branch --show-current)
+FILES=$(git diff --cached --name-only)
+
+# Count number of file changes
 if [ -z "$FILES" ]; then
   FILE_COUNT=0
 else
@@ -52,8 +55,7 @@ if [ "$FILE_COUNT" -lt 1 ]; then
     exit 0
 fi
 
-# Stage all changes
-git add .
+
 
 # Get commit message
 if [ -n "${1:-}" ]; then
