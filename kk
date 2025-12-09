@@ -5,11 +5,11 @@ KK_HOME="$HOME/.kk/commands"
 source "$HOME/.kk/lib/common"
 
 kk_list() {
-  echo -e "${CYAN}kk${NC} - personal command namespace"
+  echo -e "${CYAN}kk${NC}${GRAY} - personal command namespace:"
   echo ""
-  echo -e "${DIM_GRAY}Usage:${NC} kk <command> [args...]"
+  echo -e "${GRAY}Usage:${NC}${CYAN} kk ${INDIGO}<command>${GRAY} ${YELLOW}[args...]${NC}"
   echo ""
-  echo -e "${DIM_GRAY}Commands:${NC}"
+  echo -e "${GRAY}Commands:${NC}"
   for cmd in "$KK_HOME"/*; do
     [ -x "$cmd" ] || continue
     name=$(basename "$cmd")
@@ -19,7 +19,7 @@ kk_list() {
   echo ""
 }
 
-if [ -z "$1" ] || [ "$1" = "list" ] || [ "$1" = "--help" ]; then
+if [ -z "${1:-}" ] || [ "$1" = "list" ] || [ "$1" = "--help" ]; then
   kk_list
   exit 0
 fi
@@ -28,7 +28,7 @@ cmd="$1"
 shift
 
 if [ -x "$KK_HOME/$cmd" ]; then
-  if [ "$1" = "--help" ]; then
+  if [ "${1:-}" = "--help" ]; then
     desc=$(grep '^DESCRIPTION=' "$KK_HOME/$cmd" | head -1 | cut -d'"' -f2)
     echo -e "${GREEN}$cmd${NC} - $desc"
     echo ""

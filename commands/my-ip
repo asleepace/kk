@@ -1,0 +1,9 @@
+#!/bin/bash
+# Get your public IP address
+# Usage: kk my-ip
+
+DESCRIPTION="Get your public IP address"
+source "$HOME/.kk/lib/common"
+kk_trap_errors
+
+curl -sf https://ifconfig.me && echo ""
