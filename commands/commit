@@ -44,7 +44,7 @@ git add .
 kk_info "committing ${GREEN}${FILE_COUNT}${GRAY} file(s) to ${YELLOW}$BRANCH${NC}"
 
 echo "$FILES" | while read -r file; do
-  echo -e "  ${DIM}•${NC} ${CYAN}$(pwd)$file${NC}"
+  echo -e "  ${DIM}•${NC} ${CYAN}$(pwd)/$file${NC}"
 done
 
 # Get commit message
