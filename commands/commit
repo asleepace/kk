@@ -38,10 +38,16 @@ generate_commit_message() {
 
 BRANCH=$(git branch --show-current)
 FILES=$(git diff --name-only HEAD 2>/dev/null || git diff --name-only)
-FILE_COUNT=$(echo "$FILES" | grep -c . || echo "0")
+
+# Coun number of file changes
+if [ -z "$FILES" ]; then
+  FILE_COUNT=0
+else
+  FILE_COUNT=$(echo "$FILES" | wc -l | tr -d ' ')
+fi
 
 # Early exit if no changes
-if [ $FILE_COUNT -lt 1 ]; then
+if [ "$FILE_COUNT" -lt 1 ]; then
     echo -e "${YELLOW}No changes to commit!${NC}"
     exit 0
 fi
