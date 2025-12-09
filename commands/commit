@@ -30,7 +30,7 @@ generate_commit_message() {
       ],
       model: "grok-4-1-fast-non-reasoning",
       stream: false,
-      temperature: 0
+      temperature: 0.5
     }')" | jq -r '.choices[0].message.content'
 }
 
