@@ -1,0 +1,72 @@
+#!/bin/bash
+# Scan ports on a host
+# Usage: kk scan <host> [ports]
+# Example: kk scan asleepace.com
+# Example: kk scan 192.168.1.1 22,80,443
+# Example: kk scan asleepace.com 1-1000
+
+DESCRIPTION="Scan ports on a host"
+source "$HOME/.kk/lib/common"
+kk_trap_errors
+
+if [ -z "${1:-}" ]; then
+  kk_die "Usage: kk scan <host> [ports]"
+fi
+
+HOST="$1"
+PORTS="${2:-22,80,443,3000,3306,5432,6379,8080,8443,9000,27017}"
+
+echo -e "${CYAN}═══════════════════════════════════════${NC}"
+echo -e "${GREEN}Scanning:${NC} $HOST"
+echo -e "${CYAN}═══════════════════════════════════════${NC}"
+
+# Use nmap if available
+if command -v nmap >/dev/null 2>&1; then
+  echo -e "\n${YELLOW}Port Scan (nmap)${NC}"
+  echo -e "${DIM_GRAY}───────────────────────────────────────${NC}"
+  nmap -Pn -p "$PORTS" "$HOST" 2>/dev/null | grep -E '(open|closed|filtered)' | sed 's/^/  /'
+else
+  # Fallback to nc (netcat)
+  echo -e "\n${YELLOW}Port Scan (netcat)${NC}"
+  echo -e "${DIM_GRAY}───────────────────────────────────────${NC}"
+  
+  # Handle port range or list
+  if echo "$PORTS" | grep -q '-'; then
+    START=$(echo "$PORTS" | cut -d'-' -f1)
+    END=$(echo "$PORTS" | cut -d'-' -f2)
+    PORT_LIST=$(seq $START $END)
+  else
+    PORT_LIST=$(echo "$PORTS" | tr ',' '\n')
+  fi
+
+  for port in $PORT_LIST; do
+    nc -z -w1 "$HOST" "$port" 2>/dev/null
+    if [ $? -eq 0 ]; then
+      echo -e "  ${GREEN}$port${NC} open"
+    fi
+  done
+fi
+
+# Quick service detection on common ports
+echo -e "\n${YELLOW}Service Banners${NC}"
+echo -e "${DIM_GRAY}───────────────────────────────────────${NC}"
+for port in 22 80 443; do
+  if nc -z -w1 "$HOST" "$port" 2>/dev/null; then
+    case $port in
+      22)
+        banner=$(nc -w2 "$HOST" 22 2>/dev/null | head -1)
+        [ -n "$banner" ] && echo -e "  ${GREEN}22${NC}  $banner"
+        ;;
+      80)
+        server=$(curl -sI "http://$HOST" 2>/dev/null | grep -i '^server:' | cut -d' ' -f2-)
+        [ -n "$server" ] && echo -e "  ${GREEN}80${NC}  $server"
+        ;;
+      443)
+        server=$(curl -sI "https://$HOST" 2>/dev/null | grep -i '^server:' | cut -d' ' -f2-)
+        [ -n "$server" ] && echo -e "  ${GREEN}443${NC} $server"
+        ;;
+    esac
+  fi
+done
+
+echo ""

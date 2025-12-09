@@ -8,6 +8,11 @@ A collection of useful bash scripts.
 |---------|-------------|
 | `download` | Download files from droplet |
 | `fetch-json` | Fetch URL and parse as JSON |
+| `kill-port` | Kill process running on a port |
+| `my-ip` | Get your public IPv4 address |
+| `no-color` | Reset terminal colors |
+| `scan` | Scan ports on a host |
+| `snoop` | Get network info for a domain |
 
 ## Examples
 ```bash

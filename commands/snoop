@@ -1,0 +1,57 @@
+#!/bin/bash
+# Get network info for a domain (whois, dig, headers, etc.)
+# Usage: kk snoop <domain>
+# Example: kk snoop asleepace.com
+
+DESCRIPTION="Get network info for a domain"
+source "$HOME/.kk/lib/common"
+kk_trap_errors
+
+if [ -z "${1:-}" ]; then
+  kk_die "Usage: kk snoop <domain>"
+fi
+
+# Strip protocol if provided
+DOMAIN=$(echo "$1" | sed 's|https\?://||' | sed 's|/.*||')
+
+echo -e "${CYAN}═══════════════════════════════════════${NC}"
+echo -e "${GREEN}Snooping:${NC} $DOMAIN"
+echo -e "${CYAN}═══════════════════════════════════════${NC}"
+
+# DNS Records
+echo -e "\n${YELLOW}DNS Records${NC}"
+echo -e "${DIM_GRAY}───────────────────────────────────────${NC}"
+dig +short A "$DOMAIN" | while read ip; do echo -e "  A      $ip"; done
+dig +short AAAA "$DOMAIN" | while read ip; do echo -e "  AAAA   $ip"; done
+dig +short MX "$DOMAIN" | while read mx; do echo -e "  MX     $mx"; done
+dig +short NS "$DOMAIN" | while read ns; do echo -e "  NS     $ns"; done
+dig +short TXT "$DOMAIN" | while read txt; do echo -e "  TXT    $txt"; done
+
+# IP Geolocation
+IP=$(dig +short A "$DOMAIN" | head -1)
+if [ -n "$IP" ]; then
+  echo -e "\n${YELLOW}IP Info${NC} ($IP)"
+  echo -e "${DIM_GRAY}───────────────────────────────────────${NC}"
+  curl -sf "http://ip-api.com/json/$IP" | jq -r '
+    "  Location:  \(.city), \(.regionName), \(.country)",
+    "  ISP:       \(.isp)",
+    "  Org:       \(.org)"
+  ' 2>/dev/null
+fi
+
+# Whois (condensed)
+echo -e "\n${YELLOW}Whois${NC}"
+echo -e "${DIM_GRAY}───────────────────────────────────────${NC}"
+whois "$DOMAIN" 2>/dev/null | grep -iE '(registrar|creation|expir|name server|updated)' | head -10 | sed 's/^/  /'
+
+# HTTP Headers
+echo -e "\n${YELLOW}HTTP Headers${NC}"
+echo -e "${DIM_GRAY}───────────────────────────────────────${NC}"
+curl -sI "https://$DOMAIN" 2>/dev/null | head -15 | sed 's/^/  /'
+
+# SSL Cert
+echo -e "\n${YELLOW}SSL Certificate${NC}"
+echo -e "${DIM_GRAY}───────────────────────────────────────${NC}"
+echo | openssl s_client -connect "$DOMAIN:443" -servername "$DOMAIN" 2>/dev/null | openssl x509 -noout -dates -subject -issuer 2>/dev/null | sed 's/^/  /'
+
+echo ""

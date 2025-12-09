@@ -2,8 +2,8 @@
 # Get your public IP address
 # Usage: kk my-ip
 
-DESCRIPTION="Get your public IP address"
+DESCRIPTION="Get your public IPv4 address"
 source "$HOME/.kk/lib/common"
 kk_trap_errors
 
-curl -sf https://ifconfig.me && echo ""
+curl -4sf https://ifconfig.me && echo ""

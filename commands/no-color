@@ -1,0 +1,7 @@
+#!/bin/bash
+# Reset terminal colors
+# Usage: kk no-color
+
+DESCRIPTION="Reset terminal colors"
+
+echo -e "\033[0m"
