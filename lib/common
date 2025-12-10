@@ -20,7 +20,7 @@ export YELLOW='\033[0;33m'
 export INDIGO='\033[38;5;54m'
 
 # Logging
-kk_info()  { echo -e "${GREEN}kk${NC}${GRAY} $1"; }
+kk_info()  { echo -e "${GREEN}kk${NC} $1"; }
 kk_warn()  { echo -e "${YELLOW}kk${NC} $1"; }
 kk_error() { echo -e "${RED}kk${NC} $1" >&2; }
 kk_die()   { kk_error "$1"; exit "${2:-1}"; }
