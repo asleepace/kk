@@ -5,16 +5,16 @@ KK_HOME="$HOME/.kk/commands"
 source "$HOME/.kk/lib/common"
 
 kk_list() {
-  echo -e "${CYAN}kk${NC}${GRAY} - personal command namespace:"
+  echo -e "${GREEN}kk - personal command namespace:${NC}"
   echo ""
-  echo -e "${GRAY}Usage:${NC}${CYAN} kk ${INDIGO}<command>${GRAY} ${YELLOW}[args...]${NC}"
+  echo -e "${GREEN}Usage:${NC}${YELLOW}\n\t kk <command> [args...]${NC}"
   echo ""
-  echo -e "${GRAY}Commands:${NC}"
+  echo -e "${GREEN}Commands:${NC}"
   for cmd in "$KK_HOME"/*; do
     [ -x "$cmd" ] || continue
     name=$(basename "$cmd")
     desc=$(grep '^DESCRIPTION=' "$cmd" | head -1 | cut -d'"' -f2)
-    printf "  ${GREEN}%-14s${NC} ${DIM_GRAY}%s${NC}\n" "$name" "$desc"
+    printf "  ${CYAN}%-14s ${GREEN}%s${NC}\n" "$name" "$desc"
   done
   echo ""
 }
