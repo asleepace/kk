@@ -1,0 +1,56 @@
+#!/bin/bash
+# Fetch URL and parse as JSON
+# Usage: kk fetch-json <url>
+# Example: kk fetch-json https://api.github.com/users/asleepace
+
+DESCRIPTION="Upload screenshot and have ai return a description."
+source "$HOME/.kk/lib/common"
+kk_trap_errors
+
+if [ -z "$1" ]; then
+  kk_die "Usage: kk reanme-screenshot <path>"
+fi
+
+FILE="$1"
+ 
+# Only process PNG files
+[[ "$FILE" != *.png ]] && exit 0
+ 
+# Encode image as base64
+IMAGE_B64=$(base64 -i "$FILE")
+DIR=$(dirname "$FILE")
+ 
+# Ask Claude to describe the screenshot
+RESPONSE=$(curl -s https://api.anthropic.com/v1/messages \
+  -H "x-api-key: $CLAUDE_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "content-type: application/json" \
+  -d '{
+    "model": "claude-haiku-4-5-20251001",
+    "max_tokens": 64,
+    "messages": [{
+      "role": "user",
+      "content": [
+        {
+          "type": "image",
+          "source": {
+            "type": "base64",
+            "media_type": "image/png",
+            "data": "'"$IMAGE_B64"'"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Create descriptive title for screenshot in 2-6 words, lowercase, hyphen-separated. Return only the filename with no extension. Example: safari-github-pull-request"
+        }
+      ]
+    }]
+  }')
+ 
+# Parse the response
+NEW_NAME=$(echo "$RESPONSE" | jq -r '.content[0].text' | tr -cs 'a-z0-9-' '-' | sed 's/^-//;s/-$//')
+ 
+if [[ -n "$NEW_NAME" && "$NEW_NAME" != "null" ]]; then
+  mv "$FILE" "$DIR/$NEW_NAME.png"
+  echo "Renamed to: $NEW_NAME.png"
+fi
