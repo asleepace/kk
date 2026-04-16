@@ -1,14 +1,13 @@
 #!/bin/bash
-# Fetch URL and parse as JSON
-# Usage: kk fetch-json <url>
-# Example: kk fetch-json https://api.github.com/users/asleepace
+# Usage: kk rename-screenshot <path>
+# Example: kk rename-screenshot ~/Desktop/Screenshot.png
 
 DESCRIPTION="Upload screenshot and have ai return a description."
 source "$HOME/.kk/lib/common"
 kk_trap_errors
 
-if [ -z "$1" ]; then
-  kk_die "Usage: kk reanme-screenshot <path>"
+if [ -z "${1:-}" ]; then
+  kk_die "Usage: kk rename-screenshot <path>"
 fi
 
 FILE="$1"

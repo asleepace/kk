@@ -41,3 +41,12 @@ kk_require_cmd() {
 kk_trap_errors() {
   trap 'kk_error "command failed at line $LINENO: $BASH_COMMAND"' ERR
 }
+
+# List secret names stored under the kk.* namespace in macOS Keychain.
+kk_list_secrets() {
+  security dump-keychain 2>/dev/null \
+    | awk -F'"' '/svce/ { svc=$4 } /acct/ && svc { print svc; svc="" }' \
+    | grep '^kk\.' \
+    | sed 's/^kk\.//' \
+    | sort
+}
